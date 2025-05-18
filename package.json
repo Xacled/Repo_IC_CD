@@ -1,0 +1,12 @@
+{
+  "name": "repo_ic_cd",
+  "version": "1.0.0",
+  "description": "Este repositorio contiene el material y las configuraciones necesarias para un taller de integración continua. Durante este taller, exploraremos las siguientes herramientas y conceptos clave:",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
