@@ -1,10 +1,22 @@
+import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import App from "./App";
+import App from "../app"; // o la ruta correcta a tu componente
 
-test("muestra el texto y actualiza contador al hacer click", () => {
+test("suma dos números y muestra el resultado", () => {
   render(<App />);
-  expect(screen.getByText("Mi app sencilla para CI/CD")).toBeInTheDocument();
-  const button = screen.getByRole("button", { name: /click/i });
-  fireEvent.click(button);
-  expect(screen.getByText(/Clicks: 1/i)).toBeInTheDocument();
-});
+
+  const inputNum1 = screen.getByPlaceholderText("Número 1");
+  const inputNum2 = screen.getByPlaceholderText("Número 2");
+  const botonSumar = screen.getByRole("button", { name: /sumar/i });
+
+  // Simular entrada de números
+  fireEvent.change(inputNum1, { target: { value: "3" } });
+  fireEvent.change(inputNum2, { target: { value: "5" } });
+
+  // Clic en el botón
+  fireEvent.click(botonSumar);
+
+  // Verificar resultado
+  const resultado = screen.queryByText("Resultado: 8");
+  expect(resultado).toBeTruthy();
+  });

@@ -1,13 +1,27 @@
 import React, { useState } from "react";
 
 export default function App() {
-  const [contador, setContador] = useState(0);
+  const [numero1, setNumero1] = useState(0);
+  const [numero2, setNumero2] = useState(0);
+  const [resultado, setResultado] = useState(0);
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", textAlign: "center", marginTop: "3rem" }}>
-      <h1>Mi app sencilla para CI/CD</h1>
-      <p>Has hecho click {contador} veces.</p>
-      <button onClick={() => setContador(contador + 1)}>Haz click aquí</button>
+    <div style={{ marginTop: "1rem" }}>
+      <h2>Suma dos números</h2>
+      <input
+        type="number"
+        placeholder="Número 1"
+        onChange={(e) => setNumero1(Number(e.target.value))}
+        style={{ marginRight: "0.5rem" }}
+      />
+      <input
+        type="number"
+        placeholder="Número 2"
+        onChange={(e) => setNumero2(Number(e.target.value))}
+        style={{ marginRight: "0.5rem" }}
+      />
+      <button onClick={() => setResultado(numero1 + numero2)}>Sumar</button>
+      <p>Resultado: {resultado}</p>
     </div>
   );
 }
