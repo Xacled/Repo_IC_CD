@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import App from "../app"; // o la ruta correcta a tu componente
+import App from "../App"; // o la ruta correcta a tu componente
 
 test("suma dos números y muestra el resultado", () => {
   render(<App />);
