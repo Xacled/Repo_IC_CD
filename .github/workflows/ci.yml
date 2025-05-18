@@ -39,7 +39,7 @@ jobs:
       - run: npm run build
 
       - name: Subir a GitHub Pages (artefacto)
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: ./build
 
