@@ -56,6 +56,23 @@ jobs:
           name: github-pages  
           path: ./dist
 
+      - name: Notificar a Slack
+        if: failure()
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": ":rocket: *CI/CD completado*\n*Status:* ${{ job.status }}\n*Repositorio:* ${{ github.repository }}\n*Commit:* ${{ github.sha }}\n*Autor:* ${{ github.actor }}",
+              "attachments": [
+                {
+                  "color": "${{ job.status == 'success' && 'good' || 'danger' }}"
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+
   #No funcion azure :c
   deploy:
     name: Desplegar en GitHub Pages
@@ -75,25 +92,5 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-  notify:
-    name: Notificar a Slack
-
-    needs: [build]
-    runs-on: ubuntu-latest
-    if: needs.build.result == 'failure'
-
-    steps:
-      - name: Notificar a Slack
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          payload: |
-            {
-              "text": ":rocket: *CI/CD completado*\n*Status:* ${{ job.status }}\n*Repositorio:* ${{ github.repository }}\n*Commit:* ${{ github.sha }}\n*Autor:* ${{ github.actor }}",
-              "attachments": [
-                {
-                  "color": "${{ job.status == 'success' && 'good' || 'danger' }}"
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  # notify:
+ 
