@@ -16,6 +16,6 @@ test("suma dos números y muestra el resultado", () => {
   fireEvent.click(botonSumar);
 
   // Verificar resultado
-  const resultado = screen.queryByText("Resultado: 8");
+  const resultado = screen.queryByText("Resultado: 9");
   expect(resultado).toBeTruthy();
   });

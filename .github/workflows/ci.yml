@@ -37,14 +37,15 @@ jobs:
       - name: Limpiar caché y módulos previos
         run: |
           npm cache clean --force
-          rm -rf node_modules
+          rm -rf node_modulv  ga8tq wdc27v3ºes
           rm -f package-lock.json
 
       #instalo dependencias
       - run: npm install
 
       #ejecuto las pruebas si existen
-      - run: npm run test --if-present
+      - name: Test
+        run: npm run test --if-present
 
       #realizo el build
       - run: npm run build
@@ -77,9 +78,9 @@ jobs:
   notify:
     name: Notificar a Slack
 
-    needs: [build, deploy]
+    needs: [build]
     runs-on: ubuntu-latest
-    if: always()
+    if: needs.build.result == 'failure'
 
     steps:
       - name: Notificar a Slack
