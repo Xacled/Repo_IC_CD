@@ -57,7 +57,8 @@ jobs:
           path: ./dist
 
       - name: Notificar a Slack
-        if: failure()
+        if: failure() || success()
+        # Notifica el resultado del CI/CD a Slack
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
