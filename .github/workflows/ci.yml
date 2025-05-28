@@ -37,6 +37,7 @@ jobs:
       - name: Limpiar caché y módulos previos
         run: |
           npm cache clean --force
+          rm -rf node_modules package-lock.json
           rm -rf node_modulv  ga8tq wdc27v3ºes
           rm -f package-lock.json
 
@@ -45,7 +46,7 @@ jobs:
 
       #ejecuto las pruebas si existen
       - name: Test
-        run: npm run test --if-present
+        run: npm run test --if-present --coverage
 
       #realizo el build
       - run: npm run build
