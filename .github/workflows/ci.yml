@@ -94,7 +94,7 @@ jobs:
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
-          render deploy --yes --wait-for-completion
+          render deploy --service-id srv-d0vs4qfdiees73f695r0 --wait-for-completion
 
   #No funcion azure :c
   # deploy:
