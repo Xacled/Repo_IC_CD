@@ -68,22 +68,6 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  deploy-render:
-    name: Desplegar a Render vía API
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Hacer deploy usando Render API
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          SERVICE_ID: srv-d0vs4qfdiees73f695r0 # ← reemplazá esto con tu ID real
-        run: |
-          curl -X POST "https://api.render.com/v1/services/$SERVICE_ID/deploys" \
-            -H "Authorization: Bearer $RENDER_API_KEY" \
-            -H "Accept: application/json" \
-            -H "Content-Type: application/json" \
-            -d '{}'
-
 
   #No funcion azure :c
   # deploy:
