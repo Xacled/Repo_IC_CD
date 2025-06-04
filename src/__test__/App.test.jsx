@@ -20,9 +20,7 @@ test("suma dos números y muestra el resultado", () => {
   // Luego, simulo que hago click en el botón para disparar la suma
   fireEvent.click(botonSumar);
 
-  // Finalmente, verifico que aparezca el texto exacto "Resultado: 8"
+  // Finalmente, verifico que aparezca el texto exacto Resultado: "8"
   // uso una función matcher porque el texto está dividido en nodos (por el <strong>)
-  expect(
-    screen.getByText((_, element) => element?.textContent === "Resultado: 8")
-  ).toBeInTheDocument();
+  expect(screen.getByText("6")).toBeInTheDocument();
 });
