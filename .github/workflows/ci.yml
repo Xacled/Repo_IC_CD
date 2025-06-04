@@ -46,11 +46,11 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Subir a GitHub Pages (artefacto)
-        uses: actions/upload-artifact@v4
-        with:
-          name: github-pages
-          path: ./dist
+      # - name: Subir a GitHub Pages (artefacto)  ya no uso github pages
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: github-pages
+      #     path: ./dist
 
       - name: Notificar a Slack
         if: failure() || success()

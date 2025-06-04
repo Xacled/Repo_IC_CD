@@ -22,5 +22,5 @@ test("suma dos números y muestra el resultado", () => {
 
   // Finalmente, verifico que aparezca el texto exacto Resultado: "8"
   // uso una función matcher porque el texto está dividido en nodos (por el <strong>)
-  expect(screen.getByText("6")).toBeInTheDocument();
+  expect(screen.getByText("8")).toBeInTheDocument();
 });
