@@ -69,32 +69,21 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   deploy-render:
-    name: Desplegar en Render
+    name: Desplegar a Render vía API
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20.x"
-
-      - name: Instalar dependencias
-        run: npm install
-
-      - name: Build para Render
-        run: npm run build
-
-      - name: Instalar Render CLI
-        run: npm install -g @render/cli
-
-      - name: Desplegar a Render
+      - name: Hacer deploy usando Render API
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          SERVICE_ID: srv-d0vs4qfdiees73f695r0 # ← reemplazá esto con tu ID real
         run: |
-          render deploy --service-id srv-d0vs4qfdiees73f695r0 --wait-for-completion
+          curl -X POST "https://api.render.com/v1/services/$SERVICE_ID/deploys" \
+            -H "Authorization: Bearer $RENDER_API_KEY" \
+            -H "Accept: application/json" \
+            -H "Content-Type: application/json" \
+            -d '{}'
+
 
   #No funcion azure :c
   # deploy:
