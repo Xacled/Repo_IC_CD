@@ -1,6 +1,5 @@
 {
   "name": "repo_ic_cd",
-  "homepage": "https://xacled.github.io/Repo_IC_CD/",
   "version": "1.0.0",
   "description": "Este repositorio contiene el material y las configuraciones necesarias para un taller de integración continua. Durante este taller, exploraremos las siguientes herramientas y conceptos clave:",
   "main": "index.js",
@@ -9,9 +8,7 @@
     "dev": "vite --host 0.0.0.0",
     "test": "vitest",
     "build": "vite build",
-    "serve": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "serve": "vite preview"
   },
   "keywords": [],
   "author": "",
