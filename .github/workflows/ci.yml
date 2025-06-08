@@ -50,7 +50,7 @@ jobs:
         if: failure()
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          payload: |
+          payload: >
             {
                "text": ":test_tube: *CI/CD - Fallo en Pruebas*",
                "attachments": [
@@ -112,7 +112,7 @@ jobs:
         if: success()
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          payload: |
+          payload: >
             {
               "text": ":rocket: *CI/CD - Build completado con éxito*",
               "attachments": [
