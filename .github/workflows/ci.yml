@@ -3,69 +3,154 @@ name: CI
 # Defino cuándo se ejecuta este workflow:
 on:
   push:
-    branches: ["main"] # Cuando hago push a la rama main
+    branches: ["main"] # Aquí indico que el workflow se ejecuta cuando hago push a la rama main
   pull_request:
-    types: [opened, synchronize, reopened] # Cuando abro, sincronizo o reabro un PR hacia main
+    types: [opened, synchronize, reopened] # También se ejecuta en estos eventos de PR
     branches: ["main"]
-  workflow_dispatch: # Permito ejecución manual desde github
-  # schedule: # Programo ejecuciones periódicas //No se si dejarlo 
-  # - cron: "0 3 * * *" # Esto me va a permitir que sea a media noche todos los dias
+  workflow_dispatch: # Permito ejecución manual
 
-# Permisos necesarios para el workflow
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Evito ejecuciones concurrentes innecesarias
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  build:
-    name: Build y test
-    runs-on: ubuntu-latest 
+  test:
+    name: Test
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: true # También bajo los submódulos si existen
+          submodules: true # Hago checkout del repo y submódulos
 
       - name: Instalar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20.x" # Instalo la versión 20 de Node.js
+          node-version: "20.x"
 
       - name: Limpiar caché y módulos previos
         run: |
-          npm cache clean --force # Limpio la caché de npm
-          rm -rf node_modules package-lock.json # Borro node_modules y el lockfile para asegurarme de instalar limpio
+          npm cache clean --force
+          rm -rf node_modules package-lock.json # Limpio caché y dependencias previas
 
       - name: Instalar dependencias
-        run: npm install # Instalo todas las dependencias del proyecto
+        run: npm install
 
       - name: Test
         id: test
-        run: npm run test --if-present --coverage # Corro los tests, si existen, y genero reporte de cobertura
+        run: npm run test --if-present --coverage
 
-      - name: Build
-        id: build
-        run: npm run build # Compilo el proyecto
-
-      - name: Notificar a Slack
-        if: failure() || success() # Notifico a Slack tanto si falla como si pasa
+      - name: Notificar a Slack (Test)
+        if: failure()
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
             {
-              "text": ":rocket: *CI/CD completado*\n*Status:* ${{ job.status }}\n*Repositorio:* ${{ github.repository }}\n*Commit:* ${{ github.sha }}\n*Autor:* ${{ github.actor }}\n*Fase fallida:* ${{ steps.test.outcome == 'failure' && 'Test' || (steps.build.outcome == 'failure' && 'Build' || 'Ninguna') }}",
+               "text": ":test_tube: *CI/CD - Fallo en Pruebas*",
+               "attachments": [
+                 {
+                   "color": "danger",
+                   "fields": [
+                     {
+                       "title": "📦 Repositorio",
+                       "value": "${{ github.repository }}",
+                       "short": true
+                     },
+                     {
+                       "title": "👤 Autor",
+                       "value": "${{ github.actor }}",
+                       "short": true
+                     },
+                     {
+                       "title": "🔢 Commit",
+                       "value": "${{ github.sha }}",
+                       "short": false
+                     },
+                     {
+                       "title": "📊 Estado del job",
+                       "value": "${{ job.status }}",
+                       "short": true
+                     },
+                     {
+                       "title": "🧪 Fase fallida",
+                       "value": "Test",
+                       "short": true
+                     }
+                   ],
+                   "footer": "GitHub Actions",
+                   "ts": $(date +%s)
+                 }
+               ]
+             }
+
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: test # Este job depende de que el job de test termine
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true # Hago checkout del repo y submódulos
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+      # Instalo las dependencias del proyecto
+      - name: Instalar dependencias
+        run: npm install
+      # Ejecuto el build del proyecto
+      - name: Build
+        id: build
+        run: npm run build
+
+      - name: Notificar a Slack (Build exitoso)
+        if: success()
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": ":rocket: *CI/CD - Build completado con éxito*",
               "attachments": [
                 {
-                  "color": "${{ job.status == 'success' && 'good' || 'danger' }}"
+                  "color": "good",
+                  "fields": [
+                    {
+                      "title": "📦 Repositorio",
+                      "value": "${{ github.repository }}",
+                      "short": true
+                    },
+                    {
+                      "title": "👤 Autor",
+                      "value": "${{ github.actor }}",
+                      "short": true
+                    },
+                    {
+                      "title": "🔢 Commit",
+                      "value": "${{ github.sha }}",
+                      "short": false
+                    },
+                    {
+                      "title": "📊 Estado del build",
+                      "value": "✔️ Éxito",
+                      "short": true
+                    }
+                  ],
+                  "footer": "GitHub Actions",
+                  "ts": $(date +%s)
                 }
               ]
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} 
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
