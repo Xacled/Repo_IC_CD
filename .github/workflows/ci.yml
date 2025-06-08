@@ -84,7 +84,6 @@ jobs:
                      }
                    ],
                    "footer": "GitHub Actions",
-                   "ts": $(date +%s)
                  }
                ]
              }
