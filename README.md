@@ -34,7 +34,7 @@ https://repo-ic-cd-1.onrender.com/
 
 ## 📜 Requisitos para desarrollo local
 
-- **Node.js** >= 18
+- **Node.js** >= 20
 
 ### Pasos para configurar el entorno local:
 
