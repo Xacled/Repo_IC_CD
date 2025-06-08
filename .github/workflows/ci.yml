@@ -73,17 +73,11 @@ jobs:
                        "short": false
                      },
                      {
-                       "title": "📊 Estado del job",
-                       "value": "${{ job.status }}",
+                       "title": "📊 Estado del Test",
+                       "value": "Fallido",
                        "short": true
                      },
-                     {
-                       "title": "🧪 Fase fallida",
-                       "value": "Test",
-                       "short": true
-                     }
-                   ],
-                   "footer": "GitHub Actions",
+                   ]
                  }
                ]
              }
@@ -145,9 +139,7 @@ jobs:
                       "value": "✔️ Éxito",
                       "short": true
                     }
-                  ],
-                  "footer": "GitHub Actions",
-                  "ts": $(date +%s)
+                  ]
                 }
               ]
             }
