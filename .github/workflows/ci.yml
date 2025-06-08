@@ -1,18 +1,23 @@
 name: CI
 
+# Defino cuándo se ejecuta este workflow:
 on:
   push:
-    branches: ["main"]
+    branches: ["main"] # Cuando hago push a la rama main
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened] # Cuando abro, sincronizo o reabro un PR hacia main
     branches: ["main"]
-  workflow_dispatch:
+  workflow_dispatch: # Permito ejecución manual desde github
+  # schedule: # Programo ejecuciones periódicas //No se si dejarlo 
+  # - cron: "0 3 * * *" # Esto me va a permitir que sea a media noche todos los dias
 
+# Permisos necesarios para el workflow
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# Evito ejecuciones concurrentes innecesarias
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -20,45 +25,40 @@ concurrency:
 jobs:
   build:
     name: Build y test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: true
+          submodules: true # También bajo los submódulos si existen
 
       - name: Instalar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          node-version: "20.x" # Instalo la versión 20 de Node.js
 
       - name: Limpiar caché y módulos previos
         run: |
-          npm cache clean --force
-          rm -rf node_modules package-lock.json
+          npm cache clean --force # Limpio la caché de npm
+          rm -rf node_modules package-lock.json # Borro node_modules y el lockfile para asegurarme de instalar limpio
 
       - name: Instalar dependencias
-        run: npm install
+        run: npm install # Instalo todas las dependencias del proyecto
 
       - name: Test
-        run: npm run test --if-present --coverage
+        run: npm run test --if-present --coverage # Corro los tests, si existen, y genero reporte de cobertura
 
       - name: Build
-        run: npm run build
-
-      # - name: Subir a GitHub Pages (artefacto)  ya no uso github pages
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: github-pages
-      #     path: ./dist
+        run: npm run build # Compilo el proyecto
 
       - name: Notificar a Slack
-        if: failure() || success()
+        if: failure() || success() # Notifico a Slack tanto si falla como si pasa
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
             {
-              "text": ":rocket: *CI/CD completado*\n*Status:* ${{ job.status }}\n*Repositorio:* ${{ github.repository }}\n*Commit:* ${{ github.sha }}\n*Autor:* ${{ github.actor }}",
+              "text": ":rocket: *CI/CD completado*\n*Status:* ${{ job.status }}\n*Repositorio:* ${{ github.repository }}\n*Commit:* ${{ github.sha }}\n*Autor:* ${{ github.actor }}\n*Fase fallida:* ${{ steps.test.outcome == 'failure' && 'Test' || (steps.build.outcome == 'failure' && 'Build' || 'Ninguna') }}",
               "attachments": [
                 {
                   "color": "${{ job.status == 'success' && 'good' || 'danger' }}"
@@ -66,25 +66,4 @@ jobs:
               ]
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-
-  #No funcion azure :c
-  # deploy:
-  #   name: Desplegar en GitHub Pages
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   environment:
-  #     name: github-pages
-  #     url: ${{ steps.deployment.outputs.page_url }}
-
-  #   steps:
-  #     - name: Download artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         path: ./dist
-
-  #     - name: Deploy con GitHub Pages
-  #       id: deployment
-  #       uses: actions/deploy-pages@v4
-  # (Tu workflow original arriba)
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} 
