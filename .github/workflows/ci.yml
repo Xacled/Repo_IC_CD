@@ -47,9 +47,11 @@ jobs:
         run: npm install # Instalo todas las dependencias del proyecto
 
       - name: Test
+        id: test
         run: npm run test --if-present --coverage # Corro los tests, si existen, y genero reporte de cobertura
 
       - name: Build
+        id: build
         run: npm run build # Compilo el proyecto
 
       - name: Notificar a Slack
