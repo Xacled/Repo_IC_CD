@@ -50,36 +50,9 @@ jobs:
         if: failure()
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          payload: >
-            {
-               "text": ":test_tube: *CI/CD - Fallo en Pruebas*",
-               "attachments": [
-                 {
-                   "color": "danger",
-                   "fields": [
-                     {
-                       "title": "📦 Repositorio",
-                       "value": "${{ github.repository }}",
-                       "short": true
-                     },
-                     {
-                       "title": "👤 Autor",
-                       "value": "${{ github.actor }}",
-                       "short": true
-                     },
-                     {
-                       "title": "🔢 Commit",
-                       "value": "${{ github.sha }}",
-                       "short": false
-                     },
-                     {
-                       "title": "📊 Estado del Test",
-                       "value": "Fallido",
-                       "short": true
-                     },
-                   ]
-                 }
-               ]
+          payload: |
+             {
+               "text": ":test_tube: *CI/CD - Fallo en Pruebas*\n\n📦 Repositorio: ${{ github.repository }}\n👤 Autor: ${{ github.actor }}\n🔢 Commit: ${{ github.sha }}\n📊 Estado del Test: Fallido"
              }
 
         env:
@@ -112,36 +85,11 @@ jobs:
         if: success()
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          payload: >
-            {
-              "text": ":rocket: *CI/CD - Build completado con éxito*",
-              "attachments": [
-                {
-                  "color": "good",
-                  "fields": [
-                    {
-                      "title": "📦 Repositorio",
-                      "value": "${{ github.repository }}",
-                      "short": true
-                    },
-                    {
-                      "title": "👤 Autor",
-                      "value": "${{ github.actor }}",
-                      "short": true
-                    },
-                    {
-                      "title": "🔢 Commit",
-                      "value": "${{ github.sha }}",
-                      "short": false
-                    },
-                    {
-                      "title": "📊 Estado del build",
-                      "value": "✔️ Éxito",
-                      "short": true
-                    }
-                  ]
-                }
-              ]
-            }
+          payload: |
+             {
+               "text": ":rocket: *CI/CD - Build completado con éxito*\n\n📦 Repositorio: ${{ github.repository }}\n👤 Autor: ${{ github.actor }}\n🔢 Commit: ${{ github.sha }}\n📊 Estado del build: ✔️ Éxito"
+             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+          
