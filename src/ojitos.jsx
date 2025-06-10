@@ -54,13 +54,13 @@ const Eye = ({ mouse, eyeCenter, agrandarOjos }) => {
   );
 };
 
-// Yo soy el componente Ojitos, que contiene ambos ojos y maneja el estado del mouse
+//Componente Ojitos,contiene ambos ojos y maneja el estado del mouse
 const Ojitos = ({ agrandarOjos = false }) => {
   // Mantengo la posición del mouse relativa al SVG
   const [mouse, setMouse] = useState({ x: 100, y: 100 });
   const svgRef = useRef(null);
 
-  // Escucho el movimiento del mouse sobre el SVG y actualizo el estado
+  // Controlo el evento del movimiento del mouse sobre el SVG y actualizo el estado
   useEffect(() => {
     const handleMouseMove = (e) => {
       const rect = svgRef.current.getBoundingClientRect();

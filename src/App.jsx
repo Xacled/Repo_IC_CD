@@ -1,4 +1,4 @@
-import React, { useState,useRef} from "react";
+import React, { useState, useRef } from "react";
 import Ojitos from "./ojitos";
 
 export default function App() {
@@ -7,7 +7,7 @@ export default function App() {
   const [resultado, setResultado] = useState(0);
   const [agrandarOjos, setagrandarOjos] = useState(false);
   const botonRef = useRef(null);
-  
+
   const handleMouseMove = (e) => {
     if (botonRef.current) {
       const rect = botonRef.current.getBoundingClientRect();
