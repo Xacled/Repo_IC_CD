@@ -46,6 +46,11 @@ jobs:
         id: test
         run: npm run test --if-present --coverage
 
+      - name: Subir artifact
+        uses: actions/download-artifact@v4
+        with:
+          path: ./dist
+
       - name: Notificar a Slack (Test)
         if: failure()
         uses: slackapi/slack-github-action@v1.24.0
@@ -69,6 +74,11 @@ jobs:
         with:
           submodules: true # Hago checkout del repo y submódulos
 
+      - name: Descargar artifact
+        uses: actions/download-artifact@v4
+        with:
+          path: ./dist
+
       - name: Instalar Node.js
         uses: actions/setup-node@v4
         with:
@@ -81,13 +91,13 @@ jobs:
         id: build
         run: npm run build
 
-      - name: Notificar a Slack (Build exitoso)
-        if: success()
+      - name: Notificar a Slack (Build)
+        if: success() | failure() # Notifico tanto si el build es exitoso como si falla
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
              {
-               "text": ":rocket: *CI/CD - Build completado con éxito*\n\n📦 Repositorio: ${{ github.repository }}\n👤 Autor: ${{ github.actor }}\n🔢 Commit: ${{ github.sha }}\n📊 Estado del build: ✔️ Éxito"
+               "text": ":rocket: *CI/CD - Build completado con éxito*\n\n📦 Repositorio: ${{ github.repository }}\n👤 Autor: ${{ github.actor }}\n🔢 Commit: ${{ github.sha }}\n📊 Estado del build: ${{ job.status }}"
              }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
