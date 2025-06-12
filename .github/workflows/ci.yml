@@ -47,9 +47,9 @@ jobs:
         run: npm run test --if-present --coverage
 
       - name: Subir artifact
-        uses: actions/download-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
-          path: ./dist
+          path: dist
 
       - name: Notificar a Slack (Test)
         if: failure()
@@ -90,7 +90,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./dist
-          
+
       - name: Notificar a Slack (Build)
         if: success() || failure() # Notifico tanto si el build es exitoso como si falla
         uses: slackapi/slack-github-action@v1.24.0
