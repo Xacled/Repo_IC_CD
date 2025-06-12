@@ -27,6 +27,8 @@ export default function App() {
     <div style={estilos.contenedor} onMouseMove={handleMouseMove}>
       <div style={estilos.tarjeta}>
         <Ojitos agrandarOjos={agrandarOjos} />
+        <h2>Cambio para probar funcionamiento</h2>
+
         <h2 style={estilos.titulo}>Suma dos números</h2>
         <div>
           <input
