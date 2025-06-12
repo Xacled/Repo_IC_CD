@@ -92,7 +92,7 @@ jobs:
         run: npm run build
 
       - name: Notificar a Slack (Build)
-        if: success() | failure() # Notifico tanto si el build es exitoso como si falla
+        if: success() || failure() # Notifico tanto si el build es exitoso como si falla
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
