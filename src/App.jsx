@@ -44,7 +44,7 @@ export default function App() {
         </div>
         <button
           ref={botonRef}
-          onClick={() => setResultado(numero1 + numero2)} // En este boton se dispara la suma, si cambio la operacion el test falla
+          onClick={() => setResultado(numero1 - numero2)} // En este boton se dispara la suma, si cambio la operacion el test falla
           style={estilos.boton}
         >
           Sumar
