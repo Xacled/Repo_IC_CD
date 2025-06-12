@@ -34,23 +34,17 @@ jobs:
         with:
           node-version: "20.x"
 
-      - name: Instalar pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Limpiar caché y módulos previos
         run: |
-          pnpm store prune
-          rm -rf node_modules
+          npm cache clean --force
+          rm -rf node_modules package-lock.json # Limpio caché y dependencias previas
 
       - name: Instalar dependencias
-        run: pnpm install
-
+        run: npm install
 
       - name: Test
         id: test
-        run: pnpm run test --if-present --coverage
+        run: npm run test --if-present --coverage
 
       - name: Notificar a Slack (Test)
         if: failure()
@@ -81,11 +75,11 @@ jobs:
           node-version: "20.x"
       # Instalo las dependencias del proyecto
       - name: Instalar dependencias
-        run: pnpm install
+        run: npm install
       # Ejecuto el build del proyecto
       - name: Build
         id: build
-        run: pnpm run build
+        run: npm run build
 
       - name: Notificar a Slack (Build)
         if: success() || failure() # Notifico tanto si el build es exitoso como si falla
