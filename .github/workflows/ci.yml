@@ -1,13 +1,12 @@
 name: CI
 
-# Defino cuándo se ejecuta este workflow:
 on:
   push:
-    branches: ["main"] # Aquí indico que el workflow se ejecuta cuando hago push a la rama main
-  pull_request:
-    types: [opened, synchronize, reopened] # También se ejecuta en estos eventos de PR
     branches: ["main"]
-  workflow_dispatch: # Permito ejecución manual
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -27,24 +26,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: true # Hago checkout del repo y submódulos
+          submodules: true
 
-      - name: Instalar Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20.x"
+      - name: Instalar Bun
+        uses: oven-sh/setup-bun@v1
 
       - name: Limpiar caché y módulos previos
         run: |
-          npm cache clean --force
-          rm -rf node_modules package-lock.json # Limpio caché y dependencias previas
+          rm -rf node_modules bun.lockb
 
       - name: Instalar dependencias
-        run: npm install
+        run: bun install
 
       - name: Test
         id: test
-        run: npm run test --if-present --coverage
+        run: bun run test --if-present --coverage
 
       - name: Notificar a Slack (Test)
         if: failure()
@@ -54,35 +50,32 @@ jobs:
              {
                "text": ":test_tube: *CI/CD - Fallo en Pruebas*\n\n📦 Repositorio: ${{ github.repository }}\n👤 Autor: ${{ github.actor }}\n🔢 Commit: ${{ github.sha }}\n📊 Estado del Test: Fallido"
              }
-
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: test # Este job depende de que el job de test termine
+    needs: test
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: true # Hago checkout del repo y submódulo
+          submodules: true
 
-      - name: Instalar Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20.x"
-      # Instalo las dependencias del proyecto
+      - name: Instalar Bun
+        uses: oven-sh/setup-bun@v1
+
       - name: Instalar dependencias
-        run: npm install
-      # Ejecuto el build del proyecto
+        run: bun install
+
       - name: Build
         id: build
-        run: npm run build
+        run: bun run build
 
       - name: Notificar a Slack (Build)
-        if: success() || failure() # Notifico tanto si el build es exitoso como si falla
+        if: success() || failure()
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
@@ -91,5 +84,3 @@ jobs:
              }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-          
