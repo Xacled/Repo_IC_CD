@@ -41,11 +41,12 @@ jobs:
 
       - name: Limpiar caché y módulos previos
         run: |
-          pnpm cache clean --force
-          rm -rf node_modules pnpm-lock.yaml # Limpio caché y dependencias previas
+          pnpm store prune
+          rm -rf node_modules
 
       - name: Instalar dependencias
         run: pnpm install
+
 
       - name: Test
         id: test
